@@ -10,11 +10,16 @@ memory has to happen on the same machine as FM.
 
 ## Download and run (easiest)
 
-Grab **`GuyScout.exe`** from the [latest release](../../releases/latest). It's a single file — no install,
-no Node.js. Start FM24 and load your save, then double-click `GuyScout.exe`: it starts the local server and
-opens your browser to the scout. Click **Load game** (reading ~100k people takes about 10 seconds).
+Grab one of these from the [latest release](../../releases/latest) — no install, no Node.js:
+
+- **`GuyScout-Lite.exe`** (~2 MB) — downloads the Node runtime once on first launch (needs internet that first time), then runs offline. Best if you want a small download.
+- **`GuyScout.exe`** (~99 MB) — fully self-contained, works offline from the first run.
+
+Start FM24 and load your save, then double-click the exe: it starts the local server and opens your browser
+to the scout. Click **Load game** (reading ~100k people takes about 10 seconds).
 
 It creates a `GuyScout-data` folder next to the exe for your settings, shortlists and snapshots.
+(The Lite edition caches the Node runtime and the app in `%LOCALAPPDATA%\GuyScout`.)
 
 > Windows will likely show a SmartScreen warning ("unknown publisher") and some antivirus may flag it —
 > an unsigned program that reads another app's memory looks like a game trainer. It's safe and read-only;

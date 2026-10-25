@@ -15,7 +15,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "probe": "node server/tools/probe.ts",
     "test": "node --test \"tests/**/*.test.ts\"",
-    "build:exe": "node scripts/build-exe.mjs"
+    "build:exe": "node scripts/build-exe.mjs",
+    "build:lite": "node scripts/build-lite.mjs"
   },
   "dependencies": {
     "@fontsource/roboto": "^5.3.0",
