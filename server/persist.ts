@@ -11,7 +11,8 @@ import { DEFAULT_FM_BUILD } from './fm/slf.ts';
 import { errorMessage, HttpError, isObject } from './store.ts';
 
 export const ROOT_DIR = path.resolve(import.meta.dirname, '..');
-export const DATA_DIR = path.join(ROOT_DIR, 'data');
+// In the packaged .exe, data must live in a writable folder next to the exe, not inside the read-only bundle.
+export const DATA_DIR = process.env.GUYSCOUT_DATA_DIR ? path.resolve(process.env.GUYSCOUT_DATA_DIR) : path.join(ROOT_DIR, 'data');
 export const SNAPSHOT_DIR = path.join(DATA_DIR, 'snapshots');
 const SHORTLISTS_FILE = path.join(DATA_DIR, 'shortlists.json');
 const SETTINGS_FILE = path.join(DATA_DIR, 'settings.json');

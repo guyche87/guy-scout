@@ -4,24 +4,34 @@ A browser-based scouting tool for **Football Manager 2024**, in the spirit of FM
 It reads the running game (read-only) and shows every player, staff member and club, including
 hidden attributes, current/potential ability, role ratings, personality, contracts and sale values.
 
-Everything runs locally: a small Node.js server reads FM's memory and serves the UI to Chrome at
-<http://localhost:4824>. Nothing is sent anywhere.
+Everything runs locally: a small server on your PC reads FM's memory and serves the UI to your browser
+at <http://localhost:4824>. Nothing is sent anywhere. It can never run as a website — reading the game's
+memory has to happen on the same machine as FM.
+
+## Download and run (easiest)
+
+Grab **`GuyScout.exe`** from the [latest release](../../releases/latest). It's a single file — no install,
+no Node.js. Start FM24 and load your save, then double-click `GuyScout.exe`: it starts the local server and
+opens your browser to the scout. Click **Load game** (reading ~100k people takes about 10 seconds).
+
+It creates a `GuyScout-data` folder next to the exe for your settings, shortlists and snapshots.
+
+> Windows will likely show a SmartScreen warning ("unknown publisher") and some antivirus may flag it —
+> an unsigned program that reads another app's memory looks like a game trainer. It's safe and read-only;
+> click **More info → Run anyway**. Signing it would need a paid certificate.
 
 ## Requirements
 
-- Windows, Football Manager 2024 **24.4.x** (Steam/Epic/Game Pass, 64-bit).
-- [Node.js](https://nodejs.org) 22.18 or newer (24 LTS recommended).
-- Google Chrome (any modern browser works; Chrome is opened automatically).
+- Windows x64, Football Manager 2024 **24.4.x** (Steam/Epic/Game Pass).
+- A modern browser (Chrome is opened automatically). Nothing else for the `.exe`.
 
-## Run it
+## Run from source (for development)
 
-1. Start FM24 and load your save.
-2. Double-click **`start.bat`**. The first run installs dependencies and builds the UI (about a minute).
-3. Chrome opens the scout. Click **Load game** — reading ~100k people takes about 10 seconds.
-   Click it again whenever you want fresh data after playing on.
+- [Node.js](https://nodejs.org) 22.18 or newer, then double-click **`start.bat`** (installs deps, builds the UI,
+  starts the server, opens the browser). `start.bat --rebuild` rebuilds the UI after a code change.
+- Build the standalone exe yourself: `npm run build:exe` → `dist-exe/GuyScout.exe`.
 
 Keep the console window open while you use the scout; closing it stops the server.
-After pulling new code run `start.bat --rebuild` once to rebuild the UI.
 
 ## Features
 

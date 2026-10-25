@@ -13,13 +13,23 @@ import { errorMessage, HttpError, store } from './store.ts';
 
 const HOST = '127.0.0.1';
 const DEFAULT_PORT = 4824;
-const DIST_DIR = path.join(ROOT_DIR, 'web', 'dist');
+// The packaged .exe extracts the built UI to a temp folder and points us at it; dev serves web/dist directly.
+const DIST_DIR = process.env.GUYSCOUT_DIST_DIR ? path.resolve(process.env.GUYSCOUT_DIST_DIR) : path.join(ROOT_DIR, 'web', 'dist');
 const INDEX_HTML = path.join(DIST_DIR, 'index.html');
+const EXE_MODE = process.env.GUYSCOUT_EXE === '1';
 const LOCAL_HOSTNAMES = new Set(['127.0.0.1', 'localhost', '[::1]']);
 
 function parsePort(v: string | undefined): number {
   const n = Number(v);
   return v && Number.isInteger(n) && n > 0 && n < 65536 ? n : DEFAULT_PORT;
+}
+
+/** Opens the default browser (Windows) at the given URL, once the server is listening. */
+function openBrowser(url: string): void {
+  import('node:child_process').then(cp => {
+    // `start` is a cmd builtin; the empty "" is the window title so a URL with & is handled.
+    cp.spawn('cmd', ['/c', 'start', '', url], { detached: true, stdio: 'ignore', windowsHide: true }).on('error', () => {});
+  }).catch(() => {});
 }
 
 const PORT = parsePort(process.env.PORT);
@@ -108,8 +118,11 @@ async function start(): Promise<void> {
     process.exit(1);
   });
   server.listen(PORT, HOST, () => {
-    console.log(`Guy Scout is running at http://${HOST}:${PORT}/`);
+    const url = `http://${HOST}:${PORT}/`;
+    console.log(`Guy Scout is running at ${url}`);
     if (!existsSync(INDEX_HTML)) console.log('The web UI is not built yet (web/dist is missing): run start.bat.');
+    // In the packaged .exe there is no start.bat to open the browser, so do it here.
+    if (EXE_MODE) openBrowser(url);
     // Snapshots are only listed here; the UI decides whether to load one or read the running game.
     listSnapshots()
       .then(list => { if (list.length) console.log(`${list.length} saved snapshot(s) available in data/snapshots.`); })

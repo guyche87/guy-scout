@@ -9,3 +9,7 @@ data/
 # Claude plugin copies (provided by the installed plugin)
 .claude/agents/
 .claude/commands/
+
+# exe build artifacts
+build/
+dist-exe/
