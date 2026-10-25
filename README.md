@@ -10,16 +10,17 @@ memory has to happen on the same machine as FM.
 
 ## Download and run (easiest)
 
-Grab one of these from the [latest release](../../releases/latest) — no install, no Node.js:
+Download **`GuyScout-Lite.exe`** (~2 MB) from the [latest release](../../releases/latest) — no install, no
+Node.js. On the first launch it downloads the Node runtime once (needs internet that one time), then runs
+offline afterwards.
 
-- **`GuyScout-Lite.exe`** (~2 MB) — downloads the Node runtime once on first launch (needs internet that first time), then runs offline. Best if you want a small download.
-- **`GuyScout.exe`** (~99 MB) — fully self-contained, works offline from the first run.
+Start FM24 and load your save, then double-click `GuyScout-Lite.exe`: it starts the local server and opens
+your browser to the scout. Click **Load game** (reading ~100k people takes about 10 seconds).
 
-Start FM24 and load your save, then double-click the exe: it starts the local server and opens your browser
-to the scout. Click **Load game** (reading ~100k people takes about 10 seconds).
+It creates a `GuyScout-data` folder next to the exe for your settings, shortlists and snapshots, and caches
+the Node runtime and the app in `%LOCALAPPDATA%\GuyScout`.
 
-It creates a `GuyScout-data` folder next to the exe for your settings, shortlists and snapshots.
-(The Lite edition caches the Node runtime and the app in `%LOCALAPPDATA%\GuyScout`.)
+(Prefer a fully offline single file? Build a self-contained ~99 MB exe yourself with `npm run build:exe`.)
 
 > Windows will likely show a SmartScreen warning ("unknown publisher") and some antivirus may flag it —
 > an unsigned program that reads another app's memory looks like a game trainer. It's safe and read-only;
