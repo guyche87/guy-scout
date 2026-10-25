@@ -120,12 +120,12 @@ export function FmHeader({ route }: FmHeaderProps) {
         </button>
         <button
           type="button"
-          className="btn btn--ghost btn--icon"
-          aria-label="About Guy Scout"
+          className="btn btn--ghost btn--sm"
           title="About Guy Scout"
           onClick={() => setAboutOpen(true)}
         >
           <InfoIcon className="btn__icon" />
+          About
         </button>
       </div>
       {aboutOpen && <AboutModal onClose={() => setAboutOpen(false)} />}
