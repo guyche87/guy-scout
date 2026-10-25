@@ -165,12 +165,8 @@ function AboutModal({ onClose }: { onClose: () => void }) {
       <div className="about">
         <div className="about__logo" aria-hidden="true">GS</div>
         <h3 className="about__name">Guy Scout</h3>
-        <p className="about__tagline">A read-only scouting tool for Football Manager 2024.</p>
         <p className="about__credit">Created by <strong>Guy Chelouche</strong></p>
-        <p className="about__note muted small">
-          Reads the running game read-only — it never writes to FM or your saves. Inspired by FM Genie Scout;
-          not affiliated with Sports Interactive or FM Genie Scout.
-        </p>
+        <p className="about__note muted small">not affiliated with Sports Interactive or any other scout tool</p>
       </div>
     </Modal>
   );
