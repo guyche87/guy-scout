@@ -1,0 +1,36 @@
+/* =============================================================================
+   Guy Scout - app-specific additions (tokens only).
+   Loaded after components.css. Keep this file tiny; prefer classes from
+   docs/ui-design.md.
+   ============================================================================= */
+
+/* Shortlist notes column: room for a short note input */
+.data-table .col-note {
+  min-width: 220px;
+  padding: 0 var(--space-1);
+}
+
+.data-table .col-note > .input {
+  width: 100%;
+}
+
+/* Result header strip ("6,374 PLAYERS FOUND (FILTERED)") above a flush table: keep it off the
+   filter sidebar edge. */
+.layout-search__results > .fm-section-bar--plain {
+  flex: none;
+  padding-left: var(--space-3);
+}
+
+/* About dialog */
+.about { text-align: center; padding: var(--space-2) 0; }
+.about__logo {
+  width: 56px; height: 56px; margin: 0 auto var(--space-3);
+  display: grid; place-items: center;
+  border-radius: var(--radius-md);
+  background: linear-gradient(160deg, var(--accent), var(--accent-strong, var(--accent)));
+  color: #fff; font-family: var(--font-condensed, inherit); font-weight: 800; font-size: 22px; letter-spacing: .5px;
+}
+.about__name { margin: 0 0 var(--space-1); font-size: var(--text-xl, 20px); }
+.about__tagline { margin: 0 0 var(--space-3); color: var(--text-muted); }
+.about__credit { margin: 0 0 var(--space-3); font-size: var(--text-md, 15px); }
+.about__note { margin: 0; line-height: 1.5; }

@@ -1,0 +1,11 @@
+node_modules/
+web/dist/
+data/
+*.log
+.vercel
+.env*
+!.env.example
+
+# Claude plugin copies (provided by the installed plugin)
+.claude/agents/
+.claude/commands/

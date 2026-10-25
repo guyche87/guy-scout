@@ -1,0 +1,436 @@
+/* =============================================================================
+   Guy Scout - base  (FM24 skin)
+   Reset, document typography, scrollbars, focus, motion, utility classes.
+   Requires tokens.css to be loaded first. Fonts (Roboto, Roboto Condensed)
+   are bundled by the app via @fontsource; no network requests.
+   ============================================================================= */
+
+/* -----------------------------------------------------------------------------
+   1. Reset
+   --------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  height: 100%;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track); /* inherited */
+}
+
+body {
+  min-height: 100%;
+  font-family: var(--font-sans);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-base);
+  color: var(--text-1);
+  background: var(--bg-app);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  height: 100%;
+  isolation: isolate;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+}
+
+button {
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+ul[class],
+ol[class] {
+  list-style: none;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-tight);
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+
+p {
+  overflow-wrap: break-word;
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--text-link);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+th {
+  font-weight: var(--fw-semibold);
+  text-align: left;
+}
+
+fieldset {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+}
+
+legend {
+  padding: 0;
+}
+
+abbr[title] {
+  text-decoration: none;
+  cursor: help;
+}
+
+dialog {
+  max-width: none;
+  max-height: none;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+}
+
+summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+hr {
+  height: 1px;
+  border: 0;
+  background: var(--border);
+}
+
+[hidden] {
+  display: none !important;
+}
+
+::selection {
+  background: var(--selection-bg);
+  color: var(--text-1);
+}
+
+::placeholder {
+  color: var(--text-3);
+  opacity: 1;
+}
+
+/* -----------------------------------------------------------------------------
+   2. Scrollbars - thin and themed
+   Chrome 121+ uses the standard properties; ::-webkit-scrollbar is the fallback
+   for older Chromium and is ignored when scrollbar-width/color are set.
+   --------------------------------------------------------------------------- */
+* {
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background: var(--scrollbar-thumb) padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scrollbar-thumb-hover);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* -----------------------------------------------------------------------------
+   3. Focus - always visible for keyboard users, never for mouse clicks
+   --------------------------------------------------------------------------- */
+:focus-visible {
+  outline: var(--focus-width) solid var(--focus-ring);
+  outline-offset: var(--focus-offset);
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Programmatic focus targets (headings, panels with tabindex="-1") */
+[tabindex="-1"]:focus {
+  outline: none;
+}
+
+/* Use inside clipped / tight containers (tables, tab strips, lists) */
+.focus-inset:focus-visible {
+  outline-offset: calc(var(--focus-width) * -1);
+}
+
+/* -----------------------------------------------------------------------------
+   4. Motion
+   Components opt specific loaders back in (see components.css, "Motion
+   exemptions") so busy states still read as busy.
+   --------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* -----------------------------------------------------------------------------
+   5. Forced colours (Windows High Contrast)
+   --------------------------------------------------------------------------- */
+@media (forced-colors: active) {
+  :focus-visible {
+    outline-color: Highlight;
+  }
+}
+
+/* -----------------------------------------------------------------------------
+   6. Accessibility helpers
+   --------------------------------------------------------------------------- */
+.visually-hidden,
+.visually-hidden-focusable:not(:focus):not(:focus-within) {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.skip-link {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: var(--z-tooltip);
+  padding: var(--space-1-5) var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--accent-solid);
+  color: var(--on-accent);
+  font-weight: var(--fw-semibold);
+  text-decoration: none;
+  transform: translateY(calc(-100% - var(--space-4)));
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+/* -----------------------------------------------------------------------------
+   7. Utilities - layout
+   --------------------------------------------------------------------------- */
+.flex { display: flex; }
+.inline-flex { display: inline-flex; }
+.flex-col { flex-direction: column; }
+.flex-wrap { flex-wrap: wrap; }
+.flex-1 { flex: 1 1 0%; min-width: 0; }
+.flex-none { flex: none; }
+.shrink-0 { flex-shrink: 0; }
+.min-w-0 { min-width: 0; }
+.items-start { align-items: flex-start; }
+.items-center { align-items: center; }
+.items-end { align-items: flex-end; }
+.items-baseline { align-items: baseline; }
+.items-stretch { align-items: stretch; }
+.justify-start { justify-content: flex-start; }
+.justify-center { justify-content: center; }
+.justify-end { justify-content: flex-end; }
+.justify-between { justify-content: space-between; }
+.self-start { align-self: flex-start; }
+.self-center { align-self: center; }
+.ml-auto { margin-left: auto; }
+.mt-auto { margin-top: auto; }
+
+.grid { display: grid; }
+.grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+/* Vertical rhythm: children spaced by --stack-gap (default 8px) */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--stack-gap, var(--space-2));
+}
+
+/* Horizontal wrapping group: chips, badges, buttons */
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--cluster-gap, var(--space-1-5));
+}
+
+.spacer { flex: 1 1 auto; }
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+.relative { position: relative; }
+
+.gap-0 { gap: 0; }
+.gap-0-5 { gap: var(--space-0-5); }
+.gap-1 { gap: var(--space-1); }
+.gap-1-5 { gap: var(--space-1-5); }
+.gap-2 { gap: var(--space-2); }
+.gap-3 { gap: var(--space-3); }
+.gap-4 { gap: var(--space-4); }
+.gap-6 { gap: var(--space-6); }
+.gap-8 { gap: var(--space-8); }
+
+/* -----------------------------------------------------------------------------
+   8. Utilities - text
+   --------------------------------------------------------------------------- */
+.text-left { text-align: left; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+
+.truncate {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nowrap { white-space: nowrap; }
+
+/* Numbers: tabular figures, right aligned (use on td/th/span/dd) */
+.num {
+  font-variant-numeric: var(--font-numeric);
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Tabular figures without changing alignment */
+.tabular { font-variant-numeric: var(--font-numeric); }
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.95em;
+}
+
+.muted { color: var(--text-3); }
+.subtle { color: var(--text-2); }
+.strong { font-weight: var(--fw-bold); }
+.small { font-size: var(--fs-sm); }
+.xsmall { font-size: var(--fs-xs); }
+
+.text-positive { color: var(--positive); }
+.text-negative { color: var(--negative); }
+.text-warning { color: var(--warning); }
+.text-info { color: var(--info); }
+.text-accent { color: var(--accent); }
+
+/* Small uppercase label above a value or a group ("INTERESTED IN:") */
+.eyebrow {
+  font-family: var(--font-condensed);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+/* FM condensed uppercase type (Roboto Condensed 700) */
+.condensed {
+  font-family: var(--font-condensed);
+  font-weight: var(--fw-bold);
+}
+
+.uppercase {
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+}
+
+/* Inline SVG icon sizing (icons must be aria-hidden="true") */
+.icon {
+  display: inline-block;
+  flex: none;
+  width: var(--icon-size);
+  height: var(--icon-size);
+  vertical-align: middle;
+}
+
+.icon--sm {
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+}
+
+/* -----------------------------------------------------------------------------
+   9. Utilities - responsive visibility (breakpoints: docs/ui-design.md §3)
+   --------------------------------------------------------------------------- */
+@media (max-width: 1099.98px) {
+  .hide-below-1100 { display: none !important; }
+}
+
+@media (min-width: 1100px) {
+  .show-below-1100 { display: none !important; }
+}
+
+@media (max-width: 899.98px) {
+  .hide-below-900 { display: none !important; }
+}

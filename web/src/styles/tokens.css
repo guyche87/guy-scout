@@ -1,0 +1,438 @@
+/* =============================================================================
+   Guy Scout - design tokens  (FM24 default dark skin)
+   -----------------------------------------------------------------------------
+   * Dark FM24 look is the default (:root). Light theme: <html data-theme="light">.
+   * base.css and components.css only reference these variables. Never put raw
+     colours in components or inline styles - theming depends on it.
+   * The FM chrome (sidebar, header, sub-tabs) is purple/near-black in BOTH
+     themes; its --fm-* tokens are theme independent.
+   * Fonts: Roboto 400/500/700 and Roboto Condensed 700 are bundled locally by
+     the React app (@fontsource). Nothing is fetched from the network.
+   * Contrast figures are WCAG 2.x ratios against the surface the colour is
+     meant to sit on (AA = 4.5:1 text, 3:1 large text / UI graphics).
+   * Contract and usage rules: docs/ui-design.md
+   ============================================================================= */
+
+:root {
+  color-scheme: dark;
+
+  /* ---------------------------------------------------------------------------
+     Typography
+     ------------------------------------------------------------------------- */
+  --font-sans: "Roboto", "Segoe UI", system-ui, sans-serif;
+  --font-condensed: "Roboto Condensed", "Roboto", "Segoe UI", system-ui, sans-serif; /* uppercase titles, table headers (700 only) */
+  --font-mono: "Cascadia Mono", Consolas, ui-monospace, monospace;
+  --font-symbol: "Segoe UI Symbol", "Segoe UI", system-ui, sans-serif; /* stars, arrows, chevrons */
+  --font-numeric: tabular-nums;          /* value for font-variant-numeric */
+
+  --fs-2xs: 10.5px;    /* table headers (dense), badges */
+  --fs-xs: 11px;       /* uppercase labels, table headers, hints */
+  --fs-sm: 12px;       /* secondary lines, labels */
+  --fs-table: 12.5px;  /* dense data-table body */
+  --fs-base: 13px;     /* body text, controls, comfy tables, attribute numbers */
+  --fs-md: 14px;
+  --fs-section: 14px;  /* orange uppercase section titles */
+  --fs-lg: 16px;
+  --fs-title: 17px;    /* FM header page title */
+  --fs-xl: 19px;       /* profile name, page titles */
+  --fs-2xl: 23px;
+  --fs-3xl: 28px;
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 500;  /* Roboto ships 500, not 600 - kept as an alias */
+  --fw-bold: 700;
+
+  --lh-none: 1;
+  --lh-tight: 1.2;
+  --lh-base: 1.45;
+  --lh-relaxed: 1.6;
+
+  --tracking-caps: 0.03em;               /* condensed uppercase labels */
+
+  /* ---------------------------------------------------------------------------
+     Spacing - the number is the multiple of 4px (0-5 = 2px, 1-5 = 6px ...)
+     ------------------------------------------------------------------------- */
+  --space-0: 0;
+  --space-px: 1px;
+  --space-0-5: 2px;
+  --space-1: 4px;
+  --space-1-5: 6px;
+  --space-2: 8px;
+  --space-2-5: 10px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* ---------------------------------------------------------------------------
+     Radii - FM is square-ish
+     ------------------------------------------------------------------------- */
+  --radius-xs: 2px;
+  --radius-sm: 3px;     /* value pills, tiles, checkboxes, CTA */
+  --radius-md: 4px;     /* inputs, cards, section bars */
+  --radius-lg: 4px;     /* popovers, table frame */
+  --radius-xl: 6px;     /* modals */
+  --radius-btn: 4px;    /* buttons */
+  --radius-pill: 999px;
+
+  /* ---------------------------------------------------------------------------
+     Layout and control sizes
+     ------------------------------------------------------------------------- */
+  --fm-sidebar-w: 176px;           /* FM left navigation, >= 1100px */
+  --fm-sidebar-w-collapsed: 56px;  /* icons only, < 1100px */
+  --fm-sidebar-item-h: 36px;
+  --fm-header-h: 56px;
+  --fm-subtabs-h: 40px;
+  --topbar-h: 56px;                /* legacy .topbar uses the FM header height */
+  --nav-h: 40px;                   /* legacy .app-nav uses the sub-tab height */
+  --sidebar-w: 300px;              /* filter sidebar, >= 1100px */
+  --sidebar-drawer-w: 340px;       /* filter drawer, < 1100px */
+  --drawer-w: 720px;               /* profile drawer, >= 900px */
+  --modal-w-sm: 400px;
+  --modal-w-md: 560px;
+  --modal-w-lg: 820px;
+  --popover-w: 300px;
+
+  --control-h-sm: 24px;
+  --control-h: 28px;
+  --control-h-lg: 32px;
+  --cta-h: 40px;                   /* FM "CONTINUE" button */
+  --icon-size-sm: 14px;
+  --icon-size: 16px;
+  --hit-min: 24px;                 /* WCAG 2.2 minimum target size */
+
+  /* Tables: dense by default, FM "comfortable" two-line rows with --comfy */
+  --row-h-compact: 22px;
+  --row-h: 26px;
+  --row-h-comfy: 52px;
+  --row-h-header: 30px;
+  --row-h-header-comfy: 34px;
+  --row-h-group: 20px;
+  --cell-pad-x: 8px;
+  --col-attr-w: 30px;
+  --attr-size-sm: 18px;
+  --attr-size: 22px;               /* box of an .attr number (or tile) */
+  --attr-size-lg: 26px;
+
+  /* ---------------------------------------------------------------------------
+     Motion (reduced to ~0 under prefers-reduced-motion in base.css)
+     ------------------------------------------------------------------------- */
+  --dur-fast: 90ms;
+  --dur-base: 160ms;
+  --dur-slow: 240ms;
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ---------------------------------------------------------------------------
+     Z-index scale
+     ------------------------------------------------------------------------- */
+  --z-base: 0;
+  --z-raised: 1;
+  --z-sticky-cell: 2;
+  --z-sticky: 10;
+  --z-sticky-corner: 12;
+  --z-overlay-local: 20;
+  --z-topbar: 100;             /* FM sidebar and header */
+  --z-dropdown: 200;
+  --z-drawer: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+  --z-tooltip: 600;
+
+  /* ---------------------------------------------------------------------------
+     Focus
+     ------------------------------------------------------------------------- */
+  --focus-width: 2px;
+  --focus-offset: 2px;
+
+  /* ===========================================================================
+     FM CHROME - theme independent (same in light theme)
+     =========================================================================== */
+  --fm-sidebar-bg: linear-gradient(180deg, #2b0b4f 0%, #34105d 50%, #3e1670 100%);
+  --fm-sidebar-fg: #ffffff;                      /* >= 13:1 on the gradient */
+  --fm-sidebar-muted: #c7b8e0;                   /* group headings, 7.3:1 */
+  --fm-sidebar-sep: rgba(255, 255, 255, 0.14);
+  --fm-sidebar-hover: rgba(255, 255, 255, 0.07);
+  --fm-sidebar-active-bg: rgba(255, 255, 255, 0.1);
+  --fm-sidebar-active: #f7a21b;                  /* active item, 5.3:1 */
+  --fm-badge-alert: #d32f2f;                     /* white count 5.0:1 */
+
+  --fm-header-bg: linear-gradient(90deg, #1e0e3a 0%, #170b2d 60%, #140a26 100%);
+  --fm-header-solid: #1a0c32;
+  --fm-header-fg: #ffffff;
+  --fm-header-sub: #b9b3c6;                      /* subtitle, 8.8:1 */
+  --fm-header-border: rgba(255, 255, 255, 0.1);
+  --fm-tab-indicator: #ffffff;                   /* active sub-tab underline */
+  --fm-date: #f5a623;                            /* in-game date, 8.9:1 */
+  --fm-cta-bg: #6c4cf0;                          /* white text 5.3:1 */
+  --fm-cta-bg-hover: #7557f5;                    /* white text 4.7:1 */
+  --fm-cta-bg-active: #5c3ee0;
+  --fm-cta-fg: #ffffff;
+
+  /* ===========================================================================
+     COLOUR - DARK THEME (default)
+     =========================================================================== */
+
+  /* Surfaces */
+  --bg-app: #1b1b1d;           /* page background (charcoal) */
+  --surface-1: #202023;        /* filter sidebar, drawer, toolbars */
+  --surface-2: #252528;        /* cards, panels, section bars */
+  --surface-3: #2e2e32;        /* popovers, raised */
+  --surface-4: #3a3a3e;        /* pressed, tracks */
+  --surface-input: #141416;    /* inputs, checkboxes */
+  --overlay: rgba(6, 4, 12, 0.66);
+  --hover-overlay: rgba(255, 255, 255, 0.06);
+  --hover-overlay-strong: rgba(255, 255, 255, 0.1);
+
+  /* Text */
+  --text-1: #f0f0f2;           /* 13.4:1 on surface-2 */
+  --text-2: #bdbdc2;           /* secondary lines, 7.4:1 on surface-2, 6.0:1 on surface-4 */
+  --text-3: #9a9aa0;           /* muted / uppercase labels, 5.5:1 on surface-2 (not on surface-4) */
+  --text-disabled: #606066;
+  --text-inverse: #141416;
+  --text-link: #f7a21b;
+
+  /* Borders - FM uses very few lines */
+  --border-subtle: #2a2a2e;
+  --border: #333338;
+  --border-strong: #45454b;
+  --border-control: #6e6e74;   /* inputs, checkboxes: 3.2:1 against surface-1 */
+  --border-control-hover: #8e8e94;
+  --btn-outline: #8a8a90;      /* outlined secondary buttons, 5.0:1 on bg */
+
+  /* Action accent = FM orange */
+  --accent: #f7a21b;           /* section titles, active markers: 8.3:1 on bg */
+  --accent-solid: #f7a21b;     /* primary buttons, checked boxes */
+  --accent-solid-hover: #ffb43a;
+  --accent-solid-active: #e08e0b;
+  --accent-border: #f7a21b;
+  --accent-soft: rgba(247, 162, 27, 0.14);
+  --accent-soft-strong: rgba(247, 162, 27, 0.24);
+  --on-accent: #141416;        /* 8.9:1 on orange */
+
+  /* Brand violet (selection, CTA, focus) */
+  --violet: #a594ff;           /* 6.8:1 on bg */
+  --violet-solid: #6c4cf0;     /* white text 5.3:1 */
+  --violet-solid-hover: #7557f5;
+  --violet-solid-active: #5c3ee0;
+  --violet-soft: rgba(108, 76, 240, 0.22);
+  --on-violet: #ffffff;
+
+  /* Semantic */
+  --positive: #5fd068;
+  --positive-solid: #5cb85c;   /* "Wnt" / "Ask" badges, dark text 6.3:1 */
+  --positive-soft: rgba(95, 208, 104, 0.14);
+  --on-positive: #0b2a0b;
+
+  --negative: #ff6b6b;
+  --negative-solid: #c62828;   /* "Inj" badges, danger buttons, white 5.6:1 */
+  --negative-solid-hover: #d32f2f;
+  --negative-soft: rgba(255, 107, 107, 0.14);
+  --on-negative: #ffffff;
+
+  --warning: #f5c542;
+  --warning-solid: #f5c542;    /* dark text 11.4:1 */
+  --warning-soft: rgba(245, 197, 66, 0.14);
+  --on-warning: #141416;
+
+  --info: #5fb4ff;
+  --info-solid: #2f6fc4;       /* white 5.0:1 */
+  --info-soft: rgba(95, 180, 255, 0.14);
+  --on-info: #ffffff;
+
+  --focus-ring: #b8a8ff;       /* 8.5:1 on bg */
+  --selection-bg: rgba(108, 76, 240, 0.45);
+
+  /* Tables (opaque: sticky cells must hide what scrolls under them) */
+  --table-header-bg: #1b1b1d;
+  --table-header-fg: #9a9aa0;
+  --table-header-rule: #2a2a2e;
+  --cell-border: rgba(255, 255, 255, 0.025);
+  --row-bg: #232326;
+  --row-bg-alt: #28282b;
+  --row-hover: #2d2d31;
+  --row-selected: #2c2645;     /* violet tint */
+  --row-selected-hover: #322a4e;
+  --row-selected-bar: #a594ff;
+
+  /* Pills, bars, cards, tabs */
+  --pill-bg: #4a4a50;          /* value pills, chips: white text 8.8:1 */
+  --pill-fg: #f0f0f2;
+  --bar-track: #3a3a3e;
+  --card-border: rgba(255, 255, 255, 0.04);
+  --tab-indicator: #ffffff;
+  --profile-header-bg: linear-gradient(180deg, #2a1548 0%, #202023 100%);
+
+  /* Stars */
+  --star-on: #f5c518;
+  --star-off: #4a4a50;
+
+  /* Scrollbars */
+  --scrollbar-thumb: #4a4a50;
+  --scrollbar-thumb-hover: #5c5c63;
+  --scrollbar-track: transparent;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.45);
+  --shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+
+  /* ---------------------------------------------------------------------------
+     VALUE TIERS - FM-style coloured NUMBERS (one palette for every scale:
+     1-20 attributes, 0-100 ratings, 1-200 CA/PA; thresholds in the docs §4).
+       tier 1 poor     dim red-grey      regular
+       tier 2 below    light grey        regular
+       tier 3 decent   light green       medium
+       tier 4 good     green             bold
+       tier 5 elite    bright green      bold + subtle green capsule
+     Colour-blind safety: lightness rises with the tier (CIE L* 64 / 72 / 79 /
+     85 / 93), weight rises with the tier, and tier 5 has a background capsule.
+     Every number is >= 4.5:1 on all row states (incl. selected + hover).
+       -fg   : the number colour
+       -bg   : subtle opaque tile (.attr--tile variant; tier-5 capsule)
+       -line : bars and meters (>= 3:1 against --bar-track)
+     Tier 0 = no data (en dash).
+     ------------------------------------------------------------------------- */
+  --tier-0-fg: #9a9aa0;  --tier-0-bg: #2e2e32;  --tier-0-line: #6e6e74;
+  --tier-1-fg: #c48e8c;  --tier-1-bg: #33292a;  --tier-1-line: #c48e8c;
+  --tier-2-fg: #afb1b6;  --tier-2-bg: #2e2f33;  --tier-2-line: #afb1b6;
+  --tier-3-fg: #9fcf98;  --tier-3-bg: #263326;  --tier-3-line: #9fcf98;
+  --tier-4-fg: #7aee7e;  --tier-4-bg: #1f3a22;  --tier-4-line: #7aee7e;
+  --tier-5-fg: #a6ffa0;  --tier-5-bg: #1c4424;  --tier-5-line: #a6ffa0;
+  --tier-5-ring: rgba(166, 255, 160, 0.35);
+  --tile-edge: rgba(255, 255, 255, 0.05);
+
+  /* ---------------------------------------------------------------------------
+     PITCH and POSITION FAMILIARITY - theme independent. Coded by fill AND
+     outline style AND size, not only colour.
+     ------------------------------------------------------------------------- */
+  --pitch-grass: #1c3d2a;
+  --pitch-grass-alt: #1f4330;
+  --pitch-line: rgba(255, 255, 255, 0.3);
+  --pitch-text: #e6eee9;
+  --pitch-focus: #ffffff;
+  --fam-natural-bg: #5cf08a;       --fam-natural-fg: #062010;       /* 11.7:1 */
+  --fam-accomplished-bg: #8ab838;  --fam-accomplished-fg: #0f1a05;  /*  7.7:1 */
+  --fam-competent-bg: #a87c1c;     --fam-competent-fg: #1a1203;     /*  4.9:1 */
+  --fam-unconvincing: #f0a060;
+  --fam-awkward: #ff9a9a;
+  --fam-ineffectual: rgba(255, 255, 255, 0.35);
+  --fam-hollow-bg: rgba(0, 0, 0, 0.35);
+}
+
+/* =============================================================================
+   COLOUR - LIGHT THEME (secondary)   <html data-theme="light">
+   Content area only; the FM chrome keeps its purple look.
+   ============================================================================= */
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --bg-app: #ececef;
+  --surface-1: #f5f5f7;
+  --surface-2: #ffffff;
+  --surface-3: #f0f0f3;
+  --surface-4: #e2e3e8;
+  --surface-input: #ffffff;
+  --overlay: rgba(20, 12, 36, 0.4);
+  --hover-overlay: rgba(20, 20, 40, 0.05);
+  --hover-overlay-strong: rgba(20, 20, 40, 0.09);
+
+  --text-1: #17171a;
+  --text-2: #3e3e46;
+  --text-3: #5d5d66;           /* 6.5:1 on white, 5.1:1 on surface-4 */
+  --text-disabled: #9d9da6;
+  --text-inverse: #ffffff;
+  --text-link: #8f5000;
+
+  --border-subtle: #e3e3e8;
+  --border: #d6d6dc;
+  --border-strong: #c3c3ca;
+  --border-control: #8a8a94;   /* 3.4:1 on white */
+  --border-control-hover: #6c6c76;
+  --btn-outline: #8a8a94;
+
+  --accent: #8f5000;           /* orange as text: 6.4:1 on white */
+  --accent-solid: #f7a21b;
+  --accent-solid-hover: #ffb43a;
+  --accent-solid-active: #e08e0b;
+  --accent-border: #d48a12;
+  --accent-soft: rgba(247, 162, 27, 0.14);
+  --accent-soft-strong: rgba(247, 162, 27, 0.24);
+  --on-accent: #141416;
+
+  --violet: #5a3fd8;           /* 6.7:1 on white */
+  --violet-solid: #6c4cf0;
+  --violet-solid-hover: #5c3ee0;
+  --violet-solid-active: #4f32c8;
+  --violet-soft: rgba(108, 76, 240, 0.14);
+  --on-violet: #ffffff;
+
+  --positive: #1f7a2a;
+  --positive-solid: #5cb85c;
+  --positive-soft: rgba(31, 122, 42, 0.1);
+  --on-positive: #0b2a0b;
+
+  --negative: #b3261e;
+  --negative-solid: #c62828;
+  --negative-solid-hover: #b71c1c;
+  --negative-soft: rgba(179, 38, 30, 0.09);
+  --on-negative: #ffffff;
+
+  --warning: #7a5600;
+  --warning-solid: #f5c542;
+  --warning-soft: rgba(196, 140, 0, 0.12);
+  --on-warning: #141416;
+
+  --info: #1b5aa6;
+  --info-solid: #2f6fc4;
+  --info-soft: rgba(27, 90, 166, 0.09);
+  --on-info: #ffffff;
+
+  --focus-ring: #5a3fd8;
+  --selection-bg: rgba(108, 76, 240, 0.22);
+
+  --table-header-bg: #ececef;
+  --table-header-fg: #5d5d66;
+  --table-header-rule: #dcdce2;
+  --cell-border: rgba(0, 0, 0, 0.04);
+  --row-bg: #ffffff;
+  --row-bg-alt: #f6f6f8;
+  --row-hover: #eeeef2;
+  --row-selected: #f1edff;
+  --row-selected-hover: #e9e4ff;
+  --row-selected-bar: #6c4cf0;
+
+  --pill-bg: #e2e3e8;
+  --pill-fg: #17171a;
+  --bar-track: #e2e3e8;
+  --card-border: #dfdfe5;
+  --tab-indicator: #6c4cf0;
+  --profile-header-bg: linear-gradient(180deg, #ece6ff 0%, #f5f5f7 100%);
+
+  --star-on: #a37b00;
+  --star-off: #cfd0d6;
+
+  --scrollbar-thumb: #c4c4cc;
+  --scrollbar-thumb-hover: #a8a8b2;
+  --scrollbar-track: transparent;
+
+  --shadow-sm: 0 1px 2px rgba(20, 20, 40, 0.08);
+  --shadow-md: 0 6px 16px rgba(20, 20, 40, 0.12), 0 1px 3px rgba(20, 20, 40, 0.08);
+  --shadow-lg: 0 16px 40px rgba(20, 20, 40, 0.18), 0 2px 8px rgba(20, 20, 40, 0.08);
+  --shadow-inset: inset 0 1px 2px rgba(20, 20, 40, 0.08);
+
+  /* Tiers on white: lightness FALLS with the tier (L* 44 / 38 / 33 / 27 / 21) */
+  --tier-0-fg: #5d5d66;  --tier-0-bg: #ececf0;  --tier-0-line: #9d9da6;
+  --tier-1-fg: #8c5a5a;  --tier-1-bg: #f5ebea;  --tier-1-line: #8c5a5a;
+  --tier-2-fg: #575960;  --tier-2-bg: #ededf0;  --tier-2-line: #575960;
+  --tier-3-fg: #22582a;  --tier-3-bg: #e5f1e3;  --tier-3-line: #22582a;
+  --tier-4-fg: #164a1e;  --tier-4-bg: #dbeedb;  --tier-4-line: #164a1e;
+  --tier-5-fg: #0c3c14;  --tier-5-bg: #cfe8d2;  --tier-5-line: #0c3c14;
+  --tier-5-ring: rgba(12, 60, 20, 0.3);
+  --tile-edge: rgba(0, 0, 0, 0.08);
+}
