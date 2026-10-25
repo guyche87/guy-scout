@@ -67,3 +67,12 @@ Layout: `server/fm/` is the memory reader, `server/` the API, `shared/` the data
 
 - Read-only: the scout never writes to FM's memory or your save files.
 - Offsets target FM24 24.4.x. Some staff attribute labels are still marked "unverified" in the UI.
+
+## Licence and disclaimer
+
+MIT licensed — see [LICENSE](LICENSE). © 2026 Guy Chelouche.
+
+**Unofficial.** Guy Scout is a fan-made tool, **not affiliated with or endorsed by Sports Interactive or
+SEGA**. *Football Manager* is a trademark of Sports Interactive / SEGA. Guy Scout reads your own running
+game **read-only** — it never modifies Football Manager or your save files, and sends nothing anywhere.
+Use it at your own risk; it is provided "as is", without warranty of any kind.

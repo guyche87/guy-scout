@@ -166,7 +166,11 @@ function AboutModal({ onClose }: { onClose: () => void }) {
         <div className="about__logo" aria-hidden="true">GS</div>
         <h3 className="about__name">Guy Scout</h3>
         <p className="about__credit">Created by <strong>Guy Chelouche</strong></p>
-        <p className="about__note muted small">not affiliated with Sports Interactive or any other scout tool</p>
+        <p className="about__note muted small">
+          Unofficial — not affiliated with or endorsed by Sports Interactive or SEGA. Football Manager is
+          their trademark. Reads your game read-only; it never changes FM or your saves. MIT licensed,
+          provided as-is without warranty.
+        </p>
       </div>
     </Modal>
   );
