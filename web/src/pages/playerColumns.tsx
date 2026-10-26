@@ -106,6 +106,11 @@ function renderCell(def: PlayerColumnDef, p: Player, i: number, ctx: PlayerCellC
       const v = (p as unknown as Record<string, unknown>)[key];
       return typeof v === 'number' ? int(v) : '–';
     }
+    case 'uid': {
+      // A unique ID is an identifier, so show the raw number (no thousands separators).
+      const v = (p as unknown as Record<string, unknown>)[key];
+      return typeof v === 'number' ? <span className="num">{v}</span> : '–';
+    }
     case 'height':
       return p.height ? int(p.height) : '–';
     case 'weight':

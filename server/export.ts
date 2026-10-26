@@ -60,6 +60,8 @@ const yesNo = (v: boolean | undefined) => (v ? 'Yes' : 'No');
 function column(key: string, players: readonly Player[], hits: Hits, ctx: PlayerSearchCtx, money: ReturnType<typeof moneyFormatter>): Column {
   const col = (numeric: boolean, cell: Column['cell']): Column => ({ label: labelFor(key), numeric, cell });
   switch (key) {
+    // Unique ID is an identifier, not a quantity — output the raw number (no thousands separators).
+    case 'id': return col(false, p => String(p.id));
     case 'value': return col(true, p => money(p.value));
     case 'wage': return col(true, p => money(p.contract?.wage));
     case 'releaseClause': return col(true, p => money(releaseClauseAmount(p.contract)));

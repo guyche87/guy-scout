@@ -6,7 +6,7 @@ import {
 import { DUTY_LABELS, ROLES, ROLE_BY_ID } from '../../../shared/roles.ts';
 
 export type PlayerCellKind =
-  | 'name' | 'text' | 'club' | 'nation' | 'int' | 'ca' | 'pa' | 'growth' | 'attr' | 'pers' | 'fam'
+  | 'name' | 'text' | 'uid' | 'club' | 'nation' | 'int' | 'ca' | 'pa' | 'growth' | 'attr' | 'pers' | 'fam'
   | 'rating' | 'bestRole' | 'role' | 'value' | 'wage' | 'money' | 'date' | 'bool' | 'height' | 'weight';
 
 export interface PlayerColumnDef {
@@ -39,6 +39,7 @@ const col = (
 
 const GENERAL: PlayerColumnDef[] = [
   col('name', 'Name', 'Name', 'General', 'name', 'asc'),
+  col('id', 'UID', 'Football Manager unique ID — useful for facepacks, editors and sharing', 'General', 'uid', 'asc'),
   col('age', 'Age', 'Age', 'General', 'int', 'asc'),
   col('nation', 'Nat', 'Nationality', 'General', 'nation', 'asc'),
   col('club', 'Club', 'Club', 'General', 'club', 'asc'),
