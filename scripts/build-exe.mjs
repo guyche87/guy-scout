@@ -68,14 +68,16 @@ const payload = Buffer.concat([header, manifestJson, ...chunks]);
 const payloadPath = path.join(OUT, 'payload.bin');
 fs.writeFileSync(payloadPath, payload);
 log(`payload.bin: ${(payload.length / 1e6).toFixed(1)} MB`);
+// Cache key based on content, so a rebuilt exe always re-extracts (even at the same version).
+const payloadHash = crypto.createHash('sha256').update(payload).digest('hex').slice(0, 12);
 
 // 4) The banner runs before any bundled code: extract the payload, set env, make require('koffi') resolve to temp.
 const banner = `(() => {
   const sea = require('node:sea');
   if (!sea.isSea || !sea.isSea()) return;
   const fs = require('fs'), path = require('path'), os = require('os');
-  const RUNTIME = path.join(os.tmpdir(), 'GuyScout-runtime-${VERSION}');
-  const marker = path.join(RUNTIME, '.extracted-${VERSION}');
+  const RUNTIME = path.join(os.tmpdir(), 'GuyScout-runtime-${VERSION}-${payloadHash}');
+  const marker = path.join(RUNTIME, '.extracted');
   if (!fs.existsSync(marker)) {
     const buf = Buffer.from(sea.getAsset('payload'));
     const mlen = buf.readUInt32LE(0);
@@ -147,4 +149,3 @@ execFileSync(process.execPath, [
 
 const mb = (fs.statSync(exePath).size / 1e6).toFixed(0);
 log(`done → ${exePath} (${mb} MB)`);
-void crypto;

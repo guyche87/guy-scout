@@ -2,6 +2,7 @@
 // runs the embedded Guy Scout app. Needs no external tools — it uses the C# compiler and PowerShell that
 // ship with Windows. The heavy Node runtime (~28 MB compressed) is fetched from nodejs.org on first launch.
 import { execFileSync } from 'node:child_process';
+import crypto from 'node:crypto';
 import esbuild from 'esbuild';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -61,10 +62,13 @@ execFileSync('powershell', ['-NoProfile', '-Command',
 log(`app.zip: ${(fs.statSync(appZip).size / 1e6).toFixed(1)} MB`);
 
 // 5) Generate the C# launcher source with the pinned Node version + checksum.
+// Cache key based on the app's content, so a rebuilt exe always re-extracts (even at the same version).
+const appHash = crypto.createHash('sha256').update(fs.readFileSync(appZip)).digest('hex').slice(0, 12);
 const launcherCs = fs.readFileSync(path.join(ROOT, 'scripts', 'launcher.cs'), 'utf8')
   .replace('__NODE_VER__', NODE_VER)
   .replace('__NODE_SHA__', NODE_SHA)
-  .replace('__APP_VER__', VERSION);
+  .replace('__APP_VER__', VERSION)
+  .replace('__APP_HASH__', appHash);
 const csPath = path.join(OUT, 'GuyScoutLauncher.cs');
 fs.writeFileSync(csPath, launcherCs);
 

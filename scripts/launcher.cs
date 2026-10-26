@@ -14,6 +14,7 @@ static class GuyScoutLauncher
     const string NodeVer = "__NODE_VER__";
     const string NodeSha = "__NODE_SHA__";
     const string AppVer = "__APP_VER__";
+    const string AppHash = "__APP_HASH__"; // content hash of the embedded app — cache key, so updates refresh
 
     static int Main()
     {
@@ -34,7 +35,7 @@ static class GuyScoutLauncher
         string root = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GuyScout");
         string nodeDir = Path.Combine(root, "node-" + NodeVer);
         string nodeExe = Path.Combine(nodeDir, "node.exe");
-        string appDir = Path.Combine(root, "app-" + AppVer);
+        string appDir = Path.Combine(root, "app-" + AppVer + "-" + AppHash);
         Directory.CreateDirectory(root);
 
         if (!File.Exists(nodeExe))
