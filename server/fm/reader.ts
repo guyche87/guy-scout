@@ -74,7 +74,7 @@ export async function loadLiveGame(onProgress: ProgressFn, cfg: RatingConfig = D
     }
     onProgress({ phase: 'Building club summaries', done: persons.length, total: persons.length });
     await tick();
-    assertLayoutLooksRight(players);
+    assertLayoutLooksRight(players, s);
 
     return {
       source: 'live',
@@ -92,13 +92,17 @@ export async function loadLiveGame(onProgress: ProgressFn, cfg: RatingConfig = D
   }
 }
 
-/** Guards against a future FM patch shifting the layout: fail loudly instead of showing garbage. */
-function assertLayoutLooksRight(players: Player[]): void {
-  if (players.length < 1000) throw new Error(`Only ${players.length} players were found — the save may still be loading in FM.`);
+/** Guards against a wrong/shifted layout: fail with a diagnostic message instead of showing garbage. */
+function assertLayoutLooksRight(players: Player[], s: FmSession): void {
+  const info = s.describe();
+  if (players.length === 0) {
+    throw new Error(`${info}: found FM but could not read any players. Make sure you are inside a fully loaded save (not the main menu or a loading screen), then try again. On Game Pass or Epic the tool targets the Steam build of FM24 and may not match.`);
+  }
   let plausible = 0;
   for (const p of players) if (p.ca >= 1 && p.ca <= 200 && p.pa >= p.ca - 5 && p.attrs.pace >= 1 && p.birthDate) plausible++;
-  if (plausible / players.length < 0.9) {
-    throw new Error('Player data does not look right. This scout targets FM24 24.4.x; another FM version may use a different memory layout.');
+  // A real save has hundreds+ of players; a tiny count or mostly-garbage data means the layout is wrong.
+  if (plausible / players.length < 0.9 || plausible < 20) {
+    throw new Error(`${info}: the player data does not look right (read ${players.length}, ${plausible} plausible). This usually means the save is still loading, or a different FM build than the Steam FM24 24.4.x the tool targets (e.g. Game Pass or Epic).`);
   }
 }
 

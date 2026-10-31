@@ -1,6 +1,6 @@
 // A read-only attachment to a running fm.exe: resolves the database root and caches lookups
 // (class names, name strings, nations, competitions, clubs) shared by the player/staff/club readers.
-import { closeHandle, findProcess, mainModule, openForRead, type ModuleInfo } from './win32.ts';
+import { closeHandle, findProcesses, mainModule, openForRead, type ModuleInfo } from './win32.ts';
 import { ProcessMemory, decodeCString, isUserAddress, parseAob, readPtr, scanAob } from './memory.ts';
 import { AOB, CLUB, COMP, CONTINENT, CURRENCY, DB, NATION, TEAM } from './offsets.ts';
 import type { Currency } from '../../shared/types.ts';
@@ -21,11 +21,23 @@ export interface ClubInfo {
   reputation: number;
 }
 
+/** Guesses the store/distribution from the exe path — the key signal when the memory layout doesn't match. */
+export function detectStore(exePath: string): string {
+  const p = (exePath || '').toLowerCase();
+  if (p.includes('steamapps')) return 'Steam';
+  if (p.includes('epic games') || p.includes('epicgames')) return 'Epic';
+  if (p.includes('windowsapps') || p.includes('xboxgames') || p.includes('gamingservices')) return 'Game Pass';
+  return 'unknown store';
+}
+
 export class FmSession {
   readonly mem: ProcessMemory;
   readonly mod: ModuleInfo;
   readonly pid: number;
+  /** "Steam" / "Epic" / "Game Pass" / "unknown store", from the exe path. */
+  readonly store: string;
   dbt = 0;
+  private _version: string | null = null;
   private classCache = new Map<number, string>();
   private nameCache = new Map<number, string>();
   readonly nations = new Map<number, NationInfo>();
@@ -38,20 +50,54 @@ export class FmSession {
     this.pid = pid;
     this.mod = mod;
     this.mem = mem;
+    this.store = detectStore(mod.path);
   }
 
   static attach(): FmSession {
-    const proc = findProcess('fm.exe');
-    if (!proc) throw new Error('Football Manager 2024 (fm.exe) is not running. Start FM and load your save first.');
-    const mod = mainModule(proc.pid);
-    if (!mod) throw new Error('Could not read fm.exe module information.');
-    const s = new FmSession(proc.pid, mod, new ProcessMemory(openForRead(proc.pid)));
+    const procs = findProcesses('fm.exe');
+    if (!procs.length) throw new Error('Football Manager 2024 (fm.exe) is not running. Start FM and load your save first.');
+    // Several fm.exe may run (e.g. FM24 and FM27 both open) — pick the FM 2024 one by its install path.
+    let chosen: { pid: number; mod: ModuleInfo } | null = null;
+    let other: ModuleInfo | null = null;
+    for (const p of procs) {
+      const mod = mainModule(p.pid);
+      if (!mod) continue;
+      if (/football manager 2024/i.test(mod.path)) { chosen = { pid: p.pid, mod }; break; }
+      other ??= mod;
+    }
+    if (!chosen) {
+      const where = other?.path ?? '';
+      const product = /football manager\s*(\d{2,4})/i.exec(where)?.[1];
+      const name = product ? `Football Manager ${product}` : 'another Football Manager version';
+      throw new Error(`This tool reads Football Manager 2024. The running game looks like ${name}${where ? ` (${where})` : ''}, which uses a different engine and can't be read. Start FM 2024 (24.4.x) and load a save, then try again.`);
+    }
+    const mod = chosen.mod;
+    const s = new FmSession(chosen.pid, mod, new ProcessMemory(openForRead(chosen.pid)));
     s.dbt = s.findDbtRoot();
     if (!s.dbt) {
+      const info = s.describe();
       s.close();
-      throw new Error('FM is running but no game database was found. Load your save game in FM, then try again.');
+      throw new Error(`${info} — found FM, but no loaded game database. Make sure you are inside a fully loaded save (not the main menu or a loading screen), then click Load game again. On Game Pass or Epic the tool targets the Steam build of FM24 and may not match.`);
     }
     return s;
+  }
+
+  /** The FM version string from the exe (e.g. "24.4.2+2081827"); scanned once, on demand. */
+  version(): string {
+    if (this._version !== null) return this._version;
+    let v = '';
+    scanAob(this.mem, this.mod.base, this.mod.size, parseAob('32 34 2e'), (addr, chunk, i) => {
+      const m = /^\d{2}\.\d{1,2}\.\d{1,2}\+\d+/.exec(chunk.subarray(i, i + 28).toString('latin1'));
+      if (m) { v = m[0]; return true; }
+      return false;
+    });
+    this._version = v || 'version unknown';
+    return this._version;
+  }
+
+  /** One-line identity for error messages, e.g. "FM 24.4.2+2081827 via Steam". */
+  describe(): string {
+    return `FM ${this.version()} via ${this.store}`;
   }
 
   close(): void {

@@ -80,6 +80,25 @@ export function findProcess(exeName: string): ProcessInfo | null {
   }
 }
 
+/** All processes with the given exe name (there can be several fm.exe when multiple FM versions are open). */
+export function findProcesses(exeName: string): ProcessInfo[] {
+  const snap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0) as bigint;
+  if (snap === INVALID_HANDLE) return [];
+  const out: ProcessInfo[] = [];
+  try {
+    const entry: Record<string, unknown> = { dwSize: koffi.sizeof(PROCESSENTRY32W) };
+    let ok = Process32FirstW(snap, entry);
+    while (ok) {
+      const exe = String(entry.szExeFile);
+      if (exe.toLowerCase() === exeName.toLowerCase()) out.push({ pid: Number(entry.th32ProcessID), exe });
+      ok = Process32NextW(snap, entry);
+    }
+    return out;
+  } finally {
+    CloseHandle(snap);
+  }
+}
+
 export function mainModule(pid: number): ModuleInfo | null {
   const snap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, pid) as bigint;
   if (snap === INVALID_HANDLE) return null;
